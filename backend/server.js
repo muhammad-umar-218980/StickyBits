@@ -16,11 +16,11 @@ app.post('/api/data', (req, res, next) => {
     res.status(201).json({message: 'Post request successful!'});
 })
 
-app.put('/api/data', (req, res, next) => {
+app.put('/api/data/:id', (req, res, next) => {
     res.status(200).json({message: 'Put request successful!'});
 })
 
-app.delete('/api/data', (req, res, next) => {
+app.delete('/api/data/:id', (req, res, next) => {
     res.status(200).json({message: 'Delete request successful!'});
 })
 
