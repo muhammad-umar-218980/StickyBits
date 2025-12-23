@@ -11,6 +11,8 @@ const app = express();
 
 connectDB();
 
+app.use(express.json());
+
 
 
 
@@ -18,7 +20,7 @@ app.get('/', (req, res, next) => {
     res.send('Hello This is a simple backend server .');
 })
 
-app.use('/api/data', notesRoutes);
+app.use('/api/notes', notesRoutes);
 
 
 app.listen(PORT,()=>{
