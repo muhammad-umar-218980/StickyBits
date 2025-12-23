@@ -7,7 +7,7 @@ let PORT = 5001;
 
 
 app.get('/', (req, res, next) => {
-    res.send('This is the backend server .');
+    res.send('Hello This is the backend server .');
 })
 
 app.use('/api/data', notesRoutes);
