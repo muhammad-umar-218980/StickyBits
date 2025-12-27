@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import LoadingNotes from "../components/LoadingNotes";
 
 const HomePage = () => {
   const [notes, setNotes] = useState([]);
@@ -12,7 +13,7 @@ const HomePage = () => {
         const response = await axios.get("http://localhost:5001/api/notes");
         console.log(response);
         setNotes(response.data)
-        toast.success("Notes fetched successfully!");
+        // toast.success("Notes fetched successfully!");
       } catch (error) {
         console.error("Error fetching notes:", error);
         toast.error("Failed to fetch notes.");
@@ -27,7 +28,7 @@ const HomePage = () => {
 
   return (
     <div>
-      {loading && <div>Loading notes...</div>}
+      {loading && <LoadingNotes/>}
     </div>
   );
 };

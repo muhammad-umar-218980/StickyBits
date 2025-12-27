@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { PlusIcon } from 'lucide-react';
-import SplitText from "./SplitText";
+import SplitText from "../SplitText";
 
 const Navbar = () => {
   const handleAnimationComplete = () => {
