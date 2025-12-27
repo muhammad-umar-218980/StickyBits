@@ -8,6 +8,11 @@ import DeleteModal from '../DeleteModal';
 
 const NoteCard = ({ note, setNotes }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  
+  const isDark = note.color === "#1e293b";
+  const textColor = isDark ? "text-white" : "text-gray-800";
+  const btnColor = isDark ? "text-white hover:text-primary" : "text-gray-800 hover:text-primary";
+  const btnDeleteColor = isDark ? "text-white hover:text-error" : "text-gray-800 hover:text-error";
 
   const handleDelete = async () => {
     try {
@@ -32,27 +37,27 @@ const NoteCard = ({ note, setNotes }) => {
           style={{ backgroundColor: note.color || '#feff9c' }}
         >
           <div className="card-body p-6 flex-1 flex flex-col">
-            <h2 className="card-title text-xl font-bold text-gray-800 mb-3 group-hover:text-primary transition-colors duration-200">
+            <h2 className={`card-title text-xl font-bold mb-3 group-hover:text-primary transition-colors duration-200 ${textColor}`}>
               {note.title}
             </h2>
 
-            <p className="text-gray-800 font-semibold leading-relaxed mb-4 overflow-hidden">
+            <p className={`font-semibold leading-relaxed mb-4 overflow-hidden ${textColor}`}>
               {note.content}
             </p>
 
             <div className="mt-auto pt-4">
-              <div className="text-sm font-bold text-gray-800 mb-4">
+              <div className={`text-sm font-bold mb-4 ${textColor}`}>
                 {formatDate(note.createdAt)}
               </div>
 
               <div className="flex items-center justify-end gap-2">
                 <button
-                  className="btn btn-ghost btn-sm text-gray-800 hover:text-primary hover:bg-primary/10"
+                  className={`btn btn-ghost btn-sm hover:bg-primary/10 ${btnColor}`}
                 >
                   <PenSquare size={16} />
                 </button>
                 <button
-                  className="btn btn-ghost btn-sm text-gray-800 hover:text-error hover:bg-error/10"
+                  className={`btn btn-ghost btn-sm hover:bg-error/10 ${btnDeleteColor}`}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
