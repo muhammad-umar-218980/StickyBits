@@ -59,19 +59,12 @@ const NoteCard = ({ note , setNotes }) => {
             <div className="flex items-center justify-end gap-2">
               <button
                 className="btn btn-ghost btn-sm text-gray-800 hover:text-primary hover:bg-primary/10"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Handle view/edit action
-                  console.log('View/Edit note:', note._id);
-                }}
               >
                 <PenSquare size={16} />
               </button>
               <button
                 className="btn btn-ghost btn-sm text-gray-800 hover:text-error hover:bg-error/10"
-                onClick={(event)=>{
-                  handleDelete(event,note._id);
-                }}
+                
               >
                 <Trash2 size={16} />
               </button>
