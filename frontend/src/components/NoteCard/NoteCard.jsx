@@ -1,8 +1,33 @@
 import { Link } from 'react-router-dom';
 import { PenSquare, Trash2 } from 'lucide-react';
 import { formatDate } from '../../utils/formatDate';
+import toast from 'react-hot-toast';
+import api from '../../lib/axios';
 
-const NoteCard = ({ note }) => {
+const NoteCard = ({ note , setNotes }) => {
+
+  const handleDelete = async function(e , id){
+    e.preventDefault();
+
+    let answer = window.confirm("Are you sure you want to delete this note?");
+
+    if(!answer){
+      return;
+    }
+
+    try {
+      await api.delete(`/notes/${id}`);
+      toast.success("Note deleted successfully!");
+      setNotes((prevNotes)=>{
+        return prevNotes.filter(note => note._id !== id);
+      })
+    } catch (error) {
+      console.log("Error deleting note", error);
+      toast.error("Failed to delete note");
+    }
+  }
+
+
   return (
     <Link
       to={`/note/${note._id}`}
@@ -44,10 +69,8 @@ const NoteCard = ({ note }) => {
               </button>
               <button
                 className="btn btn-ghost btn-sm text-gray-800 hover:text-error hover:bg-error/10"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Handle delete action
-                  console.log('Delete note:', note._id);
+                onClick={(event)=>{
+                  handleDelete(event,note._id);
                 }}
               >
                 <Trash2 size={16} />
