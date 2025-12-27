@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import LoadingNotes from "../components/LoadingNotes";
 import Navbar from "../components/Navbar/Navbar"
+import NoteCard from "../components/NoteCard/NoteCard"
 
 const HomePage = () => {
   const [notes, setNotes] = useState([]);
@@ -28,19 +29,28 @@ const HomePage = () => {
 
 
   return (
-    <div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Navbar />
       {loading && <LoadingNotes/>}
 
       {notes.length > 0 && (
-        <div>
-          {notes.map((note)=>(
-            <div key={note._id} className="border p-4 m-4 rounded shadow">
-              <h2 className="text-xl font-bold mb-2">{note.title}</h2>  
-              <p className="text-gray-700">{note.content}</p>
-            </div>
-          ))}
-        </div>
+        // <div>
+        //   {notes.map((note)=>(
+        //     // <div key={note._id} className="border p-4 m-4 rounded shadow">
+        //     //   <h2 className="text-xl font-bold mb-2">{note.title}</h2>  
+        //     //   <p className="text-gray-700">{note.content}</p>
+        //     // </div>
+        //     <NoteCard key = {note._id} note={note} />
+        //   ))}
+        // </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {notes.map((note) => (
+              <NoteCard key={note._id} note={note} setNotes={setNotes} />
+            ))}
+          </div>
+
+        
       )}
     </div>
   );
