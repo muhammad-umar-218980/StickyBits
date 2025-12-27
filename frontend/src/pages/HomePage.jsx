@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import LoadingNotes from "../components/LoadingNotes";
 import Navbar from "../components/Navbar/Navbar"
 import NoteCard from "../components/NoteCard/NoteCard"
+import NoNotesFound from "../components/NoNotesFound";
 
 const HomePage = () => {
   const [notes, setNotes] = useState([]);
@@ -32,6 +33,10 @@ const HomePage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Navbar />
       {loading && <LoadingNotes/>}
+
+      {
+        notes.length === 0 && <NoNotesFound/>
+      }
 
       {notes.length > 0 && (
         // <div>
