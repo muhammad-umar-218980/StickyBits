@@ -64,7 +64,9 @@ const NoteCard = ({ note , setNotes }) => {
               </button>
               <button
                 className="btn btn-ghost btn-sm text-gray-800 hover:text-error hover:bg-error/10"
-                
+                onClick={(event)=>{
+                  handleDelete(event,note._id);
+                }}
               >
                 <Trash2 size={16} />
               </button>
