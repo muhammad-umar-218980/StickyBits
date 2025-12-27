@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../lib/axios"
 import toast from "react-hot-toast";
 import LoadingNotes from "../components/LoadingNotes";
 import Navbar from "../components/Navbar/Navbar"
@@ -12,7 +12,7 @@ const HomePage = () => {
   useEffect(() => {
     async function fetchNotes() {
       try {
-        const response = await axios.get("http://localhost:5001/api/notes");
+        const response = await api.get("/notes");
         console.log(response);
         setNotes(response.data)
         // toast.success("Notes fetched successfully!");
