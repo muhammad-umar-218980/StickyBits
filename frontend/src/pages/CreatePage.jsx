@@ -2,12 +2,13 @@ import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
-import api from "../lib/axios"
+import api from "../lib/axios";
+import ColorPalette from "../components/ColorPalette";
 
 const CreatePage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [color, setColor] = useState({ r: 255, g: 255, b: 255 });
+  const [selectedColor, setSelectedColor] = useState("#feff9c");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const CreatePage = () => {
       await api.post("/notes", {
         title,
         content,
-        color: `rgb(${color.r},${color.g},${color.b})`,
+        color: selectedColor,
       });
 
       toast.success("Note created successfully!");
@@ -47,18 +48,18 @@ const CreatePage = () => {
             Back to Notes
           </Link>
 
-          <div className="card bg-base-100">
+          <div className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <h2 className="card-title text-2xl mb-4">Create New Note</h2>
               <form onSubmit={handleSubmit}>
                 <div className="form-control mb-4">
                   <label className="label">
-                    <span className="label-text">Title</span>
+                    <span className="label-text font-medium">Title</span>
                   </label>
                   <input
                     type="text"
                     placeholder="Note Title"
-                    className="input input-bordered"
+                    className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary/50"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
@@ -66,63 +67,30 @@ const CreatePage = () => {
 
                 <div className="form-control mb-4">
                   <label className="label">
-                    <span className="label-text">Content</span>
+                    <span className="label-text font-medium">Content</span>
                   </label>
                   <textarea
                     placeholder="Write your note here..."
-                    className="textarea textarea-bordered h-32"
+                    className="textarea textarea-bordered h-32 w-full focus:outline-none focus:ring-2 focus:ring-primary/50"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                   />
                 </div>
 
-                <div className="form-control mb-4">
+                <div className="form-control mb-6">
                   <label className="label">
-                    <span className="label-text">Color</span>
+                    <span className="label-text font-medium">Color</span>
                   </label>
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="flex-1">
-                      <label className="text-sm">Red: {color.r}</label>
-                      <input
-                        type="range"
-                        min="1"
-                        max="255"
-                        value={color.r}
-                        onChange={(e) => setColor({ ...color, r: parseInt(e.target.value) })}
-                        className="range range-primary"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="text-sm">Green: {color.g}</label>
-                      <input
-                        type="range"
-                        min="1"
-                        max="255"
-                        value={color.g}
-                        onChange={(e) => setColor({ ...color, g: parseInt(e.target.value) })}
-                        className="range range-primary"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="text-sm">Blue: {color.b}</label>
-                      <input
-                        type="range"
-                        min="1"
-                        max="255"
-                        value={color.b}
-                        onChange={(e) => setColor({ ...color, b: parseInt(e.target.value) })}
-                        className="range range-primary"
-                      />
-                    </div>
+                  <div className="bg-base-200 p-4 rounded-lg">
+                    <ColorPalette
+                      selectedColor={selectedColor}
+                      onSelect={setSelectedColor}
+                    />
                   </div>
-                  <div
-                    className="w-full h-8 rounded border"
-                    style={{ backgroundColor: `rgb(${color.r},${color.g},${color.b})` }}
-                  ></div>
                 </div>
 
                 <div className="card-actions justify-end">
-                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                  <button type="submit" className="btn btn-primary px-8" disabled={loading}>
                     {loading ? "Creating..." : "Create Note"}
                   </button>
                 </div>

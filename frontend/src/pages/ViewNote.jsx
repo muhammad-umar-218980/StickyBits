@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
 import api from "../lib/axios";
 import { ArrowLeftIcon, TrashIcon, SaveIcon } from "lucide-react";
+import ColorPalette from "../components/ColorPalette";
+import DeleteModal from "../components/DeleteModal";
 
 const ViewNote = () => {
   const [note, setNote] = useState(null);
@@ -10,15 +12,8 @@ const ViewNote = () => {
   const [saving, setSaving] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
-  const [color, setColor] = useState({ r: 255, g: 255, b: 255 });
-
-  const parseRgb = (rgbString) => {
-    const match = rgbString.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-    if (match) {
-      return { r: parseInt(match[1]), g: parseInt(match[2]), b: parseInt(match[3]) };
-    }
-    return { r: 255, g: 255, b: 255 };
-  };
+  const [selectedColor, setSelectedColor] = useState("#feff9c");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const paramObject = useParams();
@@ -31,9 +26,8 @@ const ViewNote = () => {
         setNote(response.data);
         setEditedTitle(response.data.title);
         setEditedContent(response.data.content);
-        setColor(parseRgb(response.data.color || "rgb(255,255,255)"));
+        setSelectedColor(response.data.color || "#feff9c");
       } catch (error) {
-        console.log("Error in fetching the note", error);
         toast.error("Failed to fetch the note");
       } finally {
         setLoading(false);
@@ -54,13 +48,12 @@ const ViewNote = () => {
       await api.put(`/notes/${id}`, {
         title: editedTitle,
         content: editedContent,
-        color: `rgb(${color.r},${color.g},${color.b})`,
+        color: selectedColor,
       });
-      setNote({ ...note, title: editedTitle, content: editedContent, color: `rgb(${color.r},${color.g},${color.b})` });
+      setNote({ ...note, title: editedTitle, content: editedContent, color: selectedColor });
       toast.success("Note updated successfully!");
       navigate("/");
     } catch (error) {
-      console.log("Error updating note", error);
       toast.error("Failed to update note");
     } finally {
       setSaving(false);
@@ -68,14 +61,11 @@ const ViewNote = () => {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this note?")) return;
-
     try {
       await api.delete(`/notes/${id}`);
       toast.success("Note deleted successfully!");
       navigate("/");
     } catch (error) {
-      console.log("Error deleting note", error);
       toast.error("Failed to delete note");
     }
   };
@@ -109,17 +99,17 @@ const ViewNote = () => {
           </button>
 
           <div
-            className="card text-white"
+            className="card text-white shadow-xl"
             style={{ backgroundColor: "rgb(11, 17, 44)" }}
           >
             <div className="card-body">
               <div className="form-control mb-4">
                 <label className="label">
-                  <span className="label-text">Title</span>
+                  <span className="label-text text-gray-300 font-medium">Title</span>
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered"
+                  className="input input-bordered w-full text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
                 />
@@ -127,72 +117,39 @@ const ViewNote = () => {
 
               <div className="form-control mb-4">
                 <label className="label">
-                  <span className="label-text">Content</span>
+                  <span className="label-text text-gray-300 font-medium">Content</span>
                 </label>
                 <textarea
-                  className="textarea textarea-bordered h-32"
+                  className="textarea textarea-bordered h-32 w-full text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
                   value={editedContent}
                   onChange={(e) => setEditedContent(e.target.value)}
                 />
               </div>
 
-              <div className="form-control mb-4">
+              <div className="form-control mb-6">
                 <label className="label">
-                  <span className="label-text">Color</span>
+                  <span className="label-text text-gray-300 font-medium">Color</span>
                 </label>
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="flex-1">
-                    <label className="text-sm">Red: {color.r}</label>
-                    <input
-                      type="range"
-                      min="1"
-                      max="255"
-                      value={color.r}
-                      onChange={(e) => setColor({ ...color, r: parseInt(e.target.value) })}
-                      className="range range-primary"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="text-sm">Green: {color.g}</label>
-                    <input
-                      type="range"
-                      min="1"
-                      max="255"
-                      value={color.g}
-                      onChange={(e) => setColor({ ...color, g: parseInt(e.target.value) })}
-                      className="range range-primary"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="text-sm">Blue: {color.b}</label>
-                    <input
-                      type="range"
-                      min="1"
-                      max="255"
-                      value={color.b}
-                      onChange={(e) => setColor({ ...color, b: parseInt(e.target.value) })}
-                      className="range range-primary"
-                    />
-                  </div>
+                <div className="bg-base-100/10 p-4 rounded-lg backdrop-blur-sm">
+                  <ColorPalette
+                    selectedColor={selectedColor}
+                    onSelect={setSelectedColor}
+                  />
                 </div>
-                <div
-                  className="w-full h-8 rounded border"
-                  style={{ backgroundColor: `rgb(${color.r},${color.g},${color.b})` }}
-                ></div>
               </div>
 
-              <div className="card-actions justify-between">
+              <div className="card-actions justify-between mt-4">
                 <button
                   onClick={handleSave}
-                  className="btn btn-primary"
+                  className="btn btn-primary px-6"
                   disabled={saving}
                 >
                   <SaveIcon className="size-4" />
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
                 <button
-                  onClick={handleDelete}
-                  className="btn btn-error"
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="btn btn-error px-6"
                 >
                   <TrashIcon className="size-4" />
                   Delete Note
@@ -202,6 +159,14 @@ const ViewNote = () => {
           </div>
         </div>
       </div>
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Note"
+        message="Are you sure you want to delete this note? This action cannot be undone."
+      />
     </div>
   );
 };
